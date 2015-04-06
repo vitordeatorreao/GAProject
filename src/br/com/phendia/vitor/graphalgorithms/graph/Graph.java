@@ -13,7 +13,7 @@ public interface Graph {
 	 * this interface represents, the edge might connect any number of nodes.
 	 * @param nodes The nodes the edge connects
 	 */
-	public void addEdge(Node... nodes);
+	public void addEdge(float weight, Node... nodes);
 
 	/**
 	 * Adds a single node to the Graph.
@@ -25,7 +25,7 @@ public interface Graph {
 	 * Retrieves a list of Nodes that succeed the given Node.
 	 * @param node The node from which to find successors
 	 */
-	public Iterable<Node> getSuccessors(Node node);
+	public Iterable<Arc> getSuccessors(Node node);
 	
 	/**
 	 * Verifies if there exists an edge connecting the two given nodes.
