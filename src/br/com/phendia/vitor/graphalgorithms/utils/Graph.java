@@ -4,25 +4,27 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class Graph {
-	private LinkedList adjacency[];
+	private LinkedList<Edge>[] adjacency;
 	
+	@SuppressWarnings("unchecked")
 	public Graph(int numOfNodes) {
-		this.adjacency = new LinkedList[numOfNodes];
+		this.adjacency = (LinkedList<Edge>[]) new LinkedList[numOfNodes];
 		for (int i = 0; i < numOfNodes; i++) {
-			this.adjacency[i] = new LinkedList();
+			this.adjacency[i] = new LinkedList<Edge>();
 		}
 	}
 	
-	public LinkedList getAdjacentNodes(int referenceNode) {
+	public LinkedList<Edge> getAdjacentNodes(int referenceNode) {
 		return this.adjacency[referenceNode];
 	}
 	
 	public boolean existsEdgeBetween(int node1, int node2) {
-		LinkedList list = this.adjacency[node1];
-		for (int i = 0; i < list.getSize(); i++) {
-			Edge edge = (Edge) list.get(i);
+		LinkedList<Edge> list = this.adjacency[node1];
+		for (int i = 0; i < list.size(); i++) {
+			Edge edge = list.get(i);
 			if (edge.getNodeTwo() == node2) {
 				return true;
 			}
@@ -42,8 +44,7 @@ public class Graph {
 		sb.append("{\n");
 		for(int i = 0; i < this.adjacency.length; i++) {
 			sb.append("\t["+i+"] => ");
-			for(Object obj : this.adjacency[i]) {
-				Edge edge = (Edge) obj;
+			for(Edge edge : this.adjacency[i]) {
 				int successor = edge.getNodeTwo();
 				sb.append(successor+", ");
 			}
@@ -109,7 +110,7 @@ public class Graph {
 	public static void main(String[] args) {
 		Graph graph;
 		try {
-			graph = Graph.readFromFile("resources/exemplo3.gdf");
+			graph = Graph.readFromFile("resources/badExample.gdf");
 			System.out.println(graph);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
