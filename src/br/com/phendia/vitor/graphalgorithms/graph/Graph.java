@@ -1,4 +1,4 @@
-package br.com.phendia.vitor.graphalgorithms.utils;
+package br.com.phendia.vitor.graphalgorithms.graph;
 
 import java.io.BufferedReader;
 import java.io.File;
