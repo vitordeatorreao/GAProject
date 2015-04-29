@@ -31,5 +31,21 @@ public class Edge {
 	public void setWeight(float newWeight) {
 		this.weight = newWeight;
 	}
+	
+	public boolean equals(Object obj) {
+		if (! (obj instanceof Edge))
+			return false;
+		if (obj == this)
+			return true;
+		
+		Edge edge = (Edge) obj;
+		if (edge.getNodeOne() == this.getNodeOne() && 
+				edge.getNodeTwo() == this.getNodeTwo() &&
+				edge.getWeight() == this.getWeight()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }

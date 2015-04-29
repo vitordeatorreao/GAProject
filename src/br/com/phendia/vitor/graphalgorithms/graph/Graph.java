@@ -10,6 +10,8 @@ public interface Graph {
 	
 	public LinkedList<Edge> getAdjacentNodes(int referenceNode);
 	
+	public boolean existsEdgeBetween(int node1, int node2);
+	
 	public int getNumNodes();
 
 }

@@ -16,8 +16,11 @@ public class BreadthFirstSearch extends GraphSearch {
 	private int[] distance;
 	private Integer[] antecessor;
 	private int initialNode;
-	
+
 	private Boolean hasLoop;
+	private Boolean isSymmetric;
+
+	private Graph transposedGraph;
 
 	public BreadthFirstSearch(Graph graph) {
 		super(graph);
@@ -31,21 +34,26 @@ public class BreadthFirstSearch extends GraphSearch {
 		this.color = new int[getGraph().getNumNodes()];
 		this.distance = new int[getGraph().getNumNodes()];
 		this.antecessor = new Integer[getGraph().getNumNodes()];
+
 		this.hasLoop = false;
-		
-		/* Color is already set to WHITE since starting value for all elements
-		 * of the array is 0. Likewise, Predecessor is already set to null */
-		for(int node : getNodes()) {
+		this.isSymmetric = true;
+		this.transposedGraph = new PseudoDigraph(getGraph().getNumNodes());
+
+		/*
+		 * Color is already set to WHITE since starting value for all elements
+		 * of the array is 0. Likewise, Predecessor is already set to null
+		 */
+		for (int node : getNodes()) {
 			this.distance[node] = Integer.MAX_VALUE;
 		}
-		
+
 		this.color[vertice] = GRAY;
 		this.distance[vertice] = 0;
 		this.queue.add(vertice);
-		
-		while(!this.queue.isEmpty()) {
+
+		while (!this.queue.isEmpty()) {
 			int u = this.queue.poll();
-			for (Edge e : this.getGraph().getAdjacentNodes(u)) {
+			for (Edge e : getGraph().getAdjacentNodes(u)) {
 				int v = e.getNodeTwo();
 				if (this.color[v] == WHITE) {
 					this.color[v] = GRAY;
@@ -53,8 +61,12 @@ public class BreadthFirstSearch extends GraphSearch {
 					this.antecessor[v] = u;
 					this.queue.add(v);
 				}
+				this.transposedGraph.addEdge(v, u);
 				if (v == u) {
-					hasLoop = true;
+					this.hasLoop = true;
+				}
+				if (!getGraph().existsEdgeBetween(v, u)) {
+					this.isSymmetric = false;
 				}
 			}
 			this.color[u] = BLACK;
@@ -63,6 +75,10 @@ public class BreadthFirstSearch extends GraphSearch {
 
 	public Boolean getHasLoop() {
 		return hasLoop;
+	}
+
+	public Boolean isSymmetric() {
+		return isSymmetric;
 	}
 
 	public int getInitialNode() {
@@ -74,9 +90,13 @@ public class BreadthFirstSearch extends GraphSearch {
 		sb.append("{\n");
 		sb.append("\t\"initial_node\" : " + this.initialNode + ",\n");
 		sb.append("\t\"has_loop\" : " + this.hasLoop + ",\n");
+		sb.append("\t\"is_symmetric\" : " + this.isSymmetric + ",\n");
+		sb.append("\t\"transposed_graph\" : "
+				+ addCharsBetweenLines(this.transposedGraph.toString(), "\t")
+				+ ",\n");
 		sb.append("\t\"nodes\" : " + "[\n");
-		for (int i = 0; i < getGraph().getNumNodes();) {
-			sb.append("\t\t" + i +" : {\n");
+		for (int i = 0;;) {
+			sb.append("\t\t" + i + " : {\n");
 			switch (this.color[i]) {
 			case GRAY:
 				sb.append("\t\t\t\"color\" : \"gray\"\n");
@@ -89,8 +109,8 @@ public class BreadthFirstSearch extends GraphSearch {
 				sb.append("\t\t\t\"color\" : \"white\"\n");
 				break;
 			}
-			sb.append("\t\t\t\"distance\" : "+ this.distance[i] +"\n");
-			sb.append("\t\t\t\"antecessor\" : "+ this.antecessor[i] +"\n");
+			sb.append("\t\t\t\"distance\" : " + this.distance[i] + "\n");
+			sb.append("\t\t\t\"antecessor\" : " + this.antecessor[i] + "\n");
 			sb.append("\t\t}");
 			if (++i >= getGraph().getNumNodes()) {
 				sb.append("\n");
@@ -104,7 +124,17 @@ public class BreadthFirstSearch extends GraphSearch {
 		sb.append("}");
 		return sb.toString();
 	}
-	
+
+	private String addCharsBetweenLines(String string, String chars) {
+		String[] lines = string.split("\n");
+		String newString = lines[0];
+		for (int i = 1; i < lines.length; i++) {
+			newString += "\n" + (chars + lines[i]);
+		}
+		return newString;
+
+	}
+
 	public static void main(String[] args) {
 		try {
 			Graph g = PseudoDigraph.readFromFile("resources/graph1.gdf");

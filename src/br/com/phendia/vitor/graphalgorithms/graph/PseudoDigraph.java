@@ -47,14 +47,23 @@ public class PseudoDigraph implements Graph {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\n");
-		for(int i = 0; i < this.adjacency.length; i++) {
-			sb.append("\t["+i+"] => ");
+		sb.append("\t\"num_nodes\" : " + this.adjacency.length + ",\n");
+		sb.append("\t\"nodes\" : [\n");
+		for(int i = 0;;) {
+			sb.append("\t\t[");
 			for(Edge edge : this.adjacency[i]) {
 				int successor = edge.getNodeTwo();
 				sb.append(successor+", ");
 			}
-			sb.replace(sb.length()-2, sb.length(), "\n");
+			if (++i >= this.adjacency.length) {
+				sb.replace(sb.length()-2, sb.length(), "]\n");
+				break;
+			} else {
+				sb.replace(sb.length()-2, sb.length(), "],\n");
+				continue;
+			}
 		}
+		sb.append("\t]\n");
 		sb.append("}\n");
 		return sb.toString();
 	}
@@ -112,10 +121,35 @@ public class PseudoDigraph implements Graph {
 		return graph;
 	}
 	
+	public boolean equals(Object obj) {
+		if (!(obj instanceof PseudoDigraph))
+			return false;
+		if (obj == this) {
+			return true;
+		}
+		PseudoDigraph graph = (PseudoDigraph) obj;
+		if (graph.getNumNodes() != this.getNumNodes()) {
+			return false;
+		}
+		for (int i = 0; i < this.getNumNodes(); i++) {
+			if (graph.adjacency[i].size() != this.adjacency[i].size()) {
+				return false;
+			}
+			for (int j = 0; j < this.adjacency[i].size(); j++) {
+				if (
+					!this.adjacency[i].get(j).equals( graph.adjacency[i].get(j) )
+					) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	public static void main(String[] args) {
 		PseudoDigraph graph;
 		try {
-			graph = PseudoDigraph.readFromFile("resources/badExample.gdf");
+			graph = PseudoDigraph.readFromFile("resources/graph1.gdf");
 			System.out.println(graph);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
