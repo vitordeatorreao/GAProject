@@ -17,7 +17,6 @@ public abstract class GraphSearch {
 	public GraphSearch(Graph graph) {
 		this.graph = graph;
 		this.nodes = new Range( this.graph.getNumNodes() );
-		this.search(0);
 	}
 	
 	public Graph getGraph() {

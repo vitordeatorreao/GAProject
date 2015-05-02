@@ -13,7 +13,7 @@ public class BreadthFirstSearch extends GraphSearch {
 	private LinkedList<Integer> queue;
 
 	private int[] color;
-	private int[] distance;
+	private int[] distances;
 	private Integer[] antecessor;
 	private int initialNode;
 
@@ -24,7 +24,12 @@ public class BreadthFirstSearch extends GraphSearch {
 
 	public BreadthFirstSearch(Graph graph) {
 		super(graph);
-		initialNode = 0;
+		this.search(0);
+	}
+	
+	public BreadthFirstSearch(Graph graph, int startingNode) {
+		super(graph);
+		this.search(startingNode);
 	}
 
 	@Override
@@ -32,7 +37,7 @@ public class BreadthFirstSearch extends GraphSearch {
 		this.initialNode = vertice;
 		this.queue = new LinkedList<Integer>();
 		this.color = new int[getGraph().getNumNodes()];
-		this.distance = new int[getGraph().getNumNodes()];
+		this.distances = new int[getGraph().getNumNodes()];
 		this.antecessor = new Integer[getGraph().getNumNodes()];
 
 		this.hasLoop = false;
@@ -44,11 +49,11 @@ public class BreadthFirstSearch extends GraphSearch {
 		 * of the array is 0. Likewise, Predecessor is already set to null
 		 */
 		for (int node : getNodes()) {
-			this.distance[node] = Integer.MAX_VALUE;
+			this.distances[node] = Integer.MAX_VALUE;
 		}
 
 		this.color[vertice] = GRAY;
-		this.distance[vertice] = 0;
+		this.distances[vertice] = 0;
 		this.queue.add(vertice);
 
 		while (!this.queue.isEmpty()) {
@@ -57,7 +62,7 @@ public class BreadthFirstSearch extends GraphSearch {
 				int v = e.getNodeTwo();
 				if (this.color[v] == WHITE) {
 					this.color[v] = GRAY;
-					this.distance[v] = this.distance[u] + 1;
+					this.distances[v] = this.distances[u] + 1;
 					this.antecessor[v] = u;
 					this.queue.add(v);
 				}
@@ -85,6 +90,14 @@ public class BreadthFirstSearch extends GraphSearch {
 		return initialNode;
 	}
 
+	public int[] getDistances() {
+		return distances;
+	}
+
+	public Graph getTransposedGraph() {
+		return transposedGraph;
+	}
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\n");
@@ -109,7 +122,7 @@ public class BreadthFirstSearch extends GraphSearch {
 				sb.append("\t\t\t\"color\" : \"white\"\n");
 				break;
 			}
-			sb.append("\t\t\t\"distance\" : " + this.distance[i] + "\n");
+			sb.append("\t\t\t\"distance\" : " + this.distances[i] + "\n");
 			sb.append("\t\t\t\"antecessor\" : " + this.antecessor[i] + "\n");
 			sb.append("\t\t}");
 			if (++i >= getGraph().getNumNodes()) {
@@ -137,7 +150,7 @@ public class BreadthFirstSearch extends GraphSearch {
 
 	public static void main(String[] args) {
 		try {
-			Graph g = PseudoDigraph.readFromFile("resources/graph1.gdf");
+			Graph g = PseudoDigraph.readFromFile("resources/exemplo2.gdf");
 			System.out.println(g);
 			BreadthFirstSearch bfs = new BreadthFirstSearch(g);
 			System.out.println(bfs);
