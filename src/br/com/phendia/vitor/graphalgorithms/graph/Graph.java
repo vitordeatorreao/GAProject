@@ -12,6 +12,14 @@ public interface Graph {
 	
 	public boolean existsEdgeBetween(int node1, int node2);
 	
+	public boolean hasLoop();
+	
+	public boolean isSymmetric();
+	
+	public boolean hasParallelEdges();
+	
+	public Graph getTransposed();
+	
 	public int getNumNodes();
 
 }

@@ -6,8 +6,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import br.com.phendia.vitor.graphalgorithms.search.BreadthFirstSearch;
+
 public class PseudoDigraph implements Graph {
+		
 	private LinkedList<Edge>[] adjacency;
+	private BreadthFirstSearch properties;
 	
 	@SuppressWarnings("unchecked")
 	public PseudoDigraph(int numOfNodes) {
@@ -120,7 +124,40 @@ public class PseudoDigraph implements Graph {
 		br.close();
 		return graph;
 	}
+
 	
+	@Override
+	public boolean hasLoop() {
+		if (this.properties == null) {
+			this.properties = new BreadthFirstSearch(this);
+		}
+		return this.properties.hasLoop();
+	}
+
+	@Override
+	public boolean isSymmetric() {
+		if (this.properties == null) {
+			this.properties = new BreadthFirstSearch(this);
+		}
+		return this.properties.isSymmetric();
+	}
+
+	@Override
+	public boolean hasParallelEdges() {
+		if (this.properties == null) {
+			this.properties = new BreadthFirstSearch(this);
+		}
+		return this.properties.hasParallelEdges();
+	}
+
+	@Override
+	public Graph getTransposed() {
+		if (this.properties == null) {
+			this.properties = new BreadthFirstSearch(this);
+		}
+		return this.properties.getTransposedGraph();
+	}
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof PseudoDigraph))
 			return false;
@@ -145,7 +182,7 @@ public class PseudoDigraph implements Graph {
 		}
 		return true;
 	}
-	
+
 	public static void main(String[] args) {
 		PseudoDigraph graph;
 		try {

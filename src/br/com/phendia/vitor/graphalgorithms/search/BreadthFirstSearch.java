@@ -19,7 +19,7 @@ public class BreadthFirstSearch extends GraphSearch {
 
 	private Boolean hasLoop;
 	private Boolean isSymmetric;
-
+	private Boolean hasParallelEdges;
 	private Graph transposedGraph;
 
 	public BreadthFirstSearch(Graph graph) {
@@ -42,6 +42,7 @@ public class BreadthFirstSearch extends GraphSearch {
 
 		this.hasLoop = false;
 		this.isSymmetric = true;
+		this.hasParallelEdges = false;
 		this.transposedGraph = new PseudoDigraph(getGraph().getNumNodes());
 
 		/*
@@ -58,6 +59,7 @@ public class BreadthFirstSearch extends GraphSearch {
 
 		while (!this.queue.isEmpty()) {
 			int u = this.queue.poll();
+			LinkedList<Integer> neighbours = new LinkedList<Integer>();
 			for (Edge e : getGraph().getAdjacentNodes(u)) {
 				int v = e.getNodeTwo();
 				if (this.color[v] == WHITE) {
@@ -73,17 +75,26 @@ public class BreadthFirstSearch extends GraphSearch {
 				if (!getGraph().existsEdgeBetween(v, u)) {
 					this.isSymmetric = false;
 				}
+				if (neighbours.contains(v)) {
+					this.hasParallelEdges = true;
+				} else {
+					neighbours.add(v);
+				}
 			}
 			this.color[u] = BLACK;
 		}
 	}
 
-	public Boolean getHasLoop() {
+	public Boolean hasLoop() {
 		return hasLoop;
 	}
 
 	public Boolean isSymmetric() {
 		return isSymmetric;
+	}
+
+	public Boolean hasParallelEdges() {
+		return hasParallelEdges;
 	}
 
 	public int getInitialNode() {
@@ -103,6 +114,7 @@ public class BreadthFirstSearch extends GraphSearch {
 		sb.append("{\n");
 		sb.append("\t\"initial_node\" : " + this.initialNode + ",\n");
 		sb.append("\t\"has_loop\" : " + this.hasLoop + ",\n");
+		sb.append("\t\"has_parallel_edges\" : " + this.hasParallelEdges + ",\n");
 		sb.append("\t\"is_symmetric\" : " + this.isSymmetric + ",\n");
 		sb.append("\t\"transposed_graph\" : "
 				+ addCharsBetweenLines(this.transposedGraph.toString(), "\t")
@@ -150,7 +162,7 @@ public class BreadthFirstSearch extends GraphSearch {
 
 	public static void main(String[] args) {
 		try {
-			Graph g = PseudoDigraph.readFromFile("resources/exemplo2.gdf");
+			Graph g = PseudoDigraph.readFromFile("resources/exemplo1.gdf");
 			System.out.println(g);
 			BreadthFirstSearch bfs = new BreadthFirstSearch(g);
 			System.out.println(bfs);
