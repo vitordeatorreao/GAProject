@@ -48,7 +48,7 @@ public class BreadthFirstSearch extends GraphSearch {
 		 * Color is already set to WHITE since starting value for all elements
 		 * of the array is 0. Likewise, Predecessor is already set to null
 		 */
-		for (int node : getNodes()) {
+		for (int node = 0; node < getGraph().getNumNodes(); node++) {
 			this.distances[node] = Integer.MAX_VALUE;
 		}
 
