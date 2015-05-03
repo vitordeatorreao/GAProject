@@ -9,10 +9,10 @@ import java.util.LinkedList;
 import br.com.phendia.vitor.graphalgorithms.search.BreadthFirstSearch;
 
 public class PseudoDigraph implements Graph {
-		
+
 	private LinkedList<Edge>[] adjacency;
 	private BreadthFirstSearch properties;
-	
+
 	@SuppressWarnings("unchecked")
 	public PseudoDigraph(int numOfNodes) {
 		this.adjacency = (LinkedList<Edge>[]) new LinkedList[numOfNodes];
@@ -20,11 +20,11 @@ public class PseudoDigraph implements Graph {
 			this.adjacency[i] = new LinkedList<Edge>();
 		}
 	}
-	
+
 	public LinkedList<Edge> getAdjacentNodes(int referenceNode) {
 		return this.adjacency[referenceNode];
 	}
-	
+
 	public boolean existsEdgeBetween(int node1, int node2) {
 		LinkedList<Edge> list = this.adjacency[node1];
 		for (int i = 0; i < list.size(); i++) {
@@ -35,35 +35,46 @@ public class PseudoDigraph implements Graph {
 		}
 		return false;
 	}
-	
+
 	public void addEdge(int node1, int node2) {
 		this.adjacency[node1].add(new Edge(node1, node2));
+		resetProperties();
 	}
+
 	public void addEdge(int node1, int node2, float weight) {
 		this.adjacency[node1].add(new Edge(node1, node2, weight));
+		resetProperties();
 	}
-	
+
+	/**
+	 * This method must be called any time there is a change in the graph's
+	 * structure. This will cause another run of the Search Algorithm.
+	 */
+	private void resetProperties() {
+		this.properties = null;
+	}
+
 	@Override
 	public int getNumNodes() {
 		return this.adjacency.length;
 	}
-	
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\n");
 		sb.append("\t\"num_nodes\" : " + this.adjacency.length + ",\n");
 		sb.append("\t\"nodes\" : [\n");
-		for(int i = 0;;) {
+		for (int i = 0;;) {
 			sb.append("\t\t[");
-			for(Edge edge : this.adjacency[i]) {
+			for (Edge edge : this.adjacency[i]) {
 				int successor = edge.getNodeTwo();
-				sb.append(successor+", ");
+				sb.append(successor + ", ");
 			}
 			if (++i >= this.adjacency.length) {
-				sb.replace(sb.length()-2, sb.length(), "]\n");
+				sb.replace(sb.length() - 2, sb.length(), "]\n");
 				break;
 			} else {
-				sb.replace(sb.length()-2, sb.length(), "],\n");
+				sb.replace(sb.length() - 2, sb.length(), "],\n");
 				continue;
 			}
 		}
@@ -71,8 +82,9 @@ public class PseudoDigraph implements Graph {
 		sb.append("}\n");
 		return sb.toString();
 	}
-	
-	public static PseudoDigraph readFromFile(String filename) throws IOException {
+
+	public static PseudoDigraph readFromFile(String filename)
+			throws IOException {
 		File file = new File(filename);
 		if (!file.exists())
 			throw new IOException("File does not exist");
@@ -83,7 +95,7 @@ public class PseudoDigraph implements Graph {
 		int lineNumber = 1;
 		if (line == null) {
 			br.close();
-			throw new IllegalArgumentException("Syntax Error at line " 
+			throw new IllegalArgumentException("Syntax Error at line "
 					+ lineNumber + ": Expected at least one line.");
 		}
 		int numNodes = 0;
@@ -91,7 +103,7 @@ public class PseudoDigraph implements Graph {
 			numNodes = Integer.parseInt(line);
 		} catch (NumberFormatException e) {
 			br.close();
-			throw new IllegalArgumentException("Syntax Error at line " 
+			throw new IllegalArgumentException("Syntax Error at line "
 					+ lineNumber + ": Expected an integer");
 		}
 		PseudoDigraph graph = new PseudoDigraph(numNodes);
@@ -100,13 +112,15 @@ public class PseudoDigraph implements Graph {
 			lineNumber++;
 			if (line == null) {
 				continue;
-				/*br.close();
-				throw new IllegalArgumentException("Syntax Error at line " 
-						+ lineNumber + ": Expected at least "+(numNodes+1) 
-						+ "lines in the file");*/
-				//In case there are nodes with degree 0, there will be null lines
+				/*
+				 * br.close(); throw new
+				 * IllegalArgumentException("Syntax Error at line " + lineNumber
+				 * + ": Expected at least "+(numNodes+1) + "lines in the file");
+				 */
+				// In case there are nodes with degree 0, there will be null
+				// lines
 			}
-			int node = (lineNumber-2);
+			int node = (lineNumber - 2);
 			String[] nodes = line.split(" ");
 			for (int j = 0; j < nodes.length; j++) {
 				if (nodes[j].equals(""))
@@ -116,7 +130,7 @@ public class PseudoDigraph implements Graph {
 					graph.addEdge(node, node2);
 				} catch (NumberFormatException e) {
 					br.close();
-					throw new IllegalArgumentException("Syntax Error at line " 
+					throw new IllegalArgumentException("Syntax Error at line "
 							+ lineNumber + ": Expected only integers");
 				}
 			}
@@ -125,7 +139,6 @@ public class PseudoDigraph implements Graph {
 		return graph;
 	}
 
-	
 	@Override
 	public boolean hasLoop() {
 		if (this.properties == null) {
@@ -173,9 +186,7 @@ public class PseudoDigraph implements Graph {
 				return false;
 			}
 			for (int j = 0; j < this.adjacency[i].size(); j++) {
-				if (
-					!this.adjacency[i].get(j).equals( graph.adjacency[i].get(j) )
-					) {
+				if (!this.adjacency[i].get(j).equals(graph.adjacency[i].get(j))) {
 					return false;
 				}
 			}
