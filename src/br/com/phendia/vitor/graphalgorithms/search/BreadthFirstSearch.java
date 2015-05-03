@@ -14,7 +14,7 @@ public class BreadthFirstSearch extends GraphSearch {
 
 	private int[] color;
 	private int[] distances;
-	private Integer[] antecessor;
+	private Integer[] predecessor;
 	private int initialNode;
 
 	private Boolean hasLoop;
@@ -38,7 +38,7 @@ public class BreadthFirstSearch extends GraphSearch {
 		this.queue = new LinkedList<Integer>();
 		this.color = new int[getGraph().getNumNodes()];
 		this.distances = new int[getGraph().getNumNodes()];
-		this.antecessor = new Integer[getGraph().getNumNodes()];
+		this.predecessor = new Integer[getGraph().getNumNodes()];
 
 		this.hasLoop = false;
 		this.isSymmetric = true;
@@ -59,13 +59,13 @@ public class BreadthFirstSearch extends GraphSearch {
 
 		while (!this.queue.isEmpty()) {
 			int u = this.queue.poll();
-			LinkedList<Integer> neighbours = new LinkedList<Integer>();
+			LinkedList<Integer> neighbors = new LinkedList<Integer>();
 			for (Edge e : getGraph().getAdjacentNodes(u)) {
 				int v = e.getNodeTwo();
 				if (this.color[v] == WHITE) {
 					this.color[v] = GRAY;
 					this.distances[v] = this.distances[u] + 1;
-					this.antecessor[v] = u;
+					this.predecessor[v] = u;
 					this.queue.add(v);
 				}
 				this.transposedGraph.addEdge(v, u);
@@ -75,10 +75,10 @@ public class BreadthFirstSearch extends GraphSearch {
 				if (!getGraph().existsEdgeBetween(v, u)) {
 					this.isSymmetric = false;
 				}
-				if (neighbours.contains(v)) {
+				if (neighbors.contains(v)) {
 					this.hasParallelEdges = true;
 				} else {
-					neighbours.add(v);
+					neighbors.add(v);
 				}
 			}
 			this.color[u] = BLACK;
@@ -135,7 +135,7 @@ public class BreadthFirstSearch extends GraphSearch {
 				break;
 			}
 			sb.append("\t\t\t\"distance\" : " + this.distances[i] + "\n");
-			sb.append("\t\t\t\"antecessor\" : " + this.antecessor[i] + "\n");
+			sb.append("\t\t\t\"predecessor\" : " + this.predecessor[i] + "\n");
 			sb.append("\t\t}");
 			if (++i >= getGraph().getNumNodes()) {
 				sb.append("\n");
