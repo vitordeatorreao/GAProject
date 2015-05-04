@@ -1,6 +1,7 @@
 package br.com.phendia.vitor.graphalgorithms.graph;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public interface Graph {
 	
@@ -19,6 +20,8 @@ public interface Graph {
 	public boolean hasParallelEdges();
 	
 	public Graph getTransposed();
+	
+	public List<List<Integer>> getStronglyConnectedComponents();
 	
 	public int getNumNodes();
 

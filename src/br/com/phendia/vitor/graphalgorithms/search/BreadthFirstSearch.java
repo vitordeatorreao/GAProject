@@ -11,7 +11,6 @@ public class BreadthFirstSearch extends GraphSearch {
 
 	// A Java LinkedList can act as a queue
 	private LinkedList<Integer> queue;
-
 	private int[] color;
 	private int[] distances;
 	private Integer[] predecessor;

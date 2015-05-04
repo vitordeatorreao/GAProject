@@ -5,8 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
-
+import java.util.List;
 import br.com.phendia.vitor.graphalgorithms.search.BreadthFirstSearch;
+import br.com.phendia.vitor.graphalgorithms.search.DepthFirstSearch;
 
 public class PseudoDigraph implements Graph {
 
@@ -71,6 +72,22 @@ public class PseudoDigraph implements Graph {
 				sb.append(successor + ", ");
 			}
 			if (++i >= this.adjacency.length) {
+				sb.replace(sb.length() - 2, sb.length(), "]\n");
+				break;
+			} else {
+				sb.replace(sb.length() - 2, sb.length(), "],\n");
+				continue;
+			}
+		}
+		sb.append("\t],\n");
+		sb.append("\t\"strongly_connected_components\" : [\n");
+		List<List<Integer>> scc = this.getStronglyConnectedComponents();
+		for (int i = 0;;) {
+			sb.append("\t\t[");
+			for (int node : scc.get(i)) {
+				sb.append(node + ", ");
+			}
+			if (++i >= scc.size()) {
 				sb.replace(sb.length() - 2, sb.length(), "]\n");
 				break;
 			} else {
@@ -171,6 +188,12 @@ public class PseudoDigraph implements Graph {
 		return this.properties.getTransposedGraph();
 	}
 
+	@Override
+	public List<List<Integer>> getStronglyConnectedComponents() {
+		List<Integer> topologicOrder = (new DepthFirstSearch(this)).getTopologicOrder();
+		return (new DepthFirstSearch(this.getTransposed())).getSCC(topologicOrder);
+	}
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof PseudoDigraph))
 			return false;
@@ -197,7 +220,7 @@ public class PseudoDigraph implements Graph {
 	public static void main(String[] args) {
 		PseudoDigraph graph;
 		try {
-			graph = PseudoDigraph.readFromFile("resources/graph1.gdf");
+			graph = PseudoDigraph.readFromFile("resources/cfcs.gdf");
 			System.out.println(graph);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

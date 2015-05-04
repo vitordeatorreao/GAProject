@@ -2,18 +2,19 @@ package br.com.phendia.vitor.graphalgorithms.search;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 
 import br.com.phendia.vitor.graphalgorithms.graph.Edge;
 import br.com.phendia.vitor.graphalgorithms.graph.Graph;
 import br.com.phendia.vitor.graphalgorithms.graph.PseudoDigraph;
 
 public class DepthFirstSearch extends GraphSearch {
-
+	
 	private int[] color;
 	private Integer[] predecessor;
 	private int[] initialTime; // Moment the node (index) is visited
 	private int[] finalTime; // Moment the node's (index) neighbors are visited
-	private LinkedList<Integer> topologicOrder;
+	private LinkedList<Integer> visitedNodes;
 
 	private int time;
 	
@@ -24,15 +25,30 @@ public class DepthFirstSearch extends GraphSearch {
 		super(graph);
 	}
 	
-	public LinkedList<Integer> getTopologicOrder() {
-		this.topologicOrder = new LinkedList<Integer>();
+	//ORDEM-TOP
+	public List<Integer> getTopologicOrder() {
+		this.visitedNodes = new LinkedList<Integer>();
 		this.initialNode = 0;
 		this.setUpNewSearch();
 		for (int node = 0; node < getGraph().getNumNodes(); node++) {
 			if (this.color[node] == WHITE)
 				this.dfsVisit(node);
 		}
-		return this.topologicOrder;
+		return this.visitedNodes;
+	}
+	
+	//DFS-START*
+	public List<List<Integer>> getSCC(List<Integer> nodes) {
+		List<List<Integer>> result = new LinkedList<List<Integer>>();
+		this.setUpNewSearch();
+		for (int node : nodes) {
+			if (this.color[node] == WHITE) {
+				this.visitedNodes = new LinkedList<Integer>();
+				this.dfsVisit(node);
+				result.add(visitedNodes);
+			}
+		}
+		return result;
 	}
 	
 	private void setUpNewSearch() {
@@ -74,8 +90,8 @@ public class DepthFirstSearch extends GraphSearch {
 		}
 		this.color[u] = BLACK;
 		this.finalTime[u] = this.time++;
-		if (this.topologicOrder != null) {
-			this.topologicOrder.push(u);
+		if (this.visitedNodes != null) {
+			this.visitedNodes.push(u);
 		}
 	}
 
@@ -88,11 +104,11 @@ public class DepthFirstSearch extends GraphSearch {
 		sb.append("{\n");
 		sb.append("\t\"initial_node\" : " + this.initialNode + ",\n");
 		sb.append("\t\"has_cycle\" : " + this.hasCycle + ",\n");
-		if (this.topologicOrder != null) {
+		if (this.visitedNodes != null) {
 			sb.append("\t\"topological_order\" : [");
 			for (int i = 0;;) {
-				sb.append(this.topologicOrder.get(i));
-				if (++i >= this.topologicOrder.size()) {
+				sb.append(this.visitedNodes.get(i));
+				if (++i >= this.visitedNodes.size()) {
 					sb.append("]\n");
 					break;
 				} else {
@@ -136,7 +152,7 @@ public class DepthFirstSearch extends GraphSearch {
 	public static void main(String[] args) {
 		
 		try {
-			Graph g = PseudoDigraph.readFromFile("resources/topologicExample.gdf");
+			Graph g = PseudoDigraph.readFromFile("resources/cfcs.gdf");
 			DepthFirstSearch dfs = new DepthFirstSearch(g);
 			dfs.getTopologicOrder();
 			System.out.println(dfs);
