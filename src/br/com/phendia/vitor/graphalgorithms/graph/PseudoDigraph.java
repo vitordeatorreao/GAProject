@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+
 import br.com.phendia.vitor.graphalgorithms.search.BreadthFirstSearch;
 import br.com.phendia.vitor.graphalgorithms.search.DepthFirstSearch;
 
@@ -80,22 +81,22 @@ public class PseudoDigraph implements Graph {
 			}
 		}
 		sb.append("\t],\n");
-		sb.append("\t\"strongly_connected_components\" : [\n");
-		List<List<Integer>> scc = this.getStronglyConnectedComponents();
-		for (int i = 0;;) {
-			sb.append("\t\t[");
-			for (int node : scc.get(i)) {
-				sb.append(node + ", ");
-			}
-			if (++i >= scc.size()) {
-				sb.replace(sb.length() - 2, sb.length(), "]\n");
-				break;
-			} else {
-				sb.replace(sb.length() - 2, sb.length(), "],\n");
-				continue;
-			}
-		}
-		sb.append("\t]\n");
+//		sb.append("\t\"strongly_connected_components\" : [\n");
+//		List<List<Integer>> scc = this.getStronglyConnectedComponents();
+//		for (int i = 0;;) {
+//			sb.append("\t\t[");
+//			for (int node : scc.get(i)) {
+//				sb.append(node + ", ");
+//			}
+//			if (++i >= scc.size()) {
+//				sb.replace(sb.length() - 2, sb.length(), "]\n");
+//				break;
+//			} else {
+//				sb.replace(sb.length() - 2, sb.length(), "],\n");
+//				continue;
+//			}
+//		}
+//		sb.append("\t]\n");
 		sb.append("}\n");
 		return sb.toString();
 	}
@@ -173,11 +174,28 @@ public class PseudoDigraph implements Graph {
 	}
 
 	@Override
+	public boolean isStronglyConnected() {
+		return getStronglyConnectedComponents().size() == 1;
+	}
+
+	@Override
 	public boolean hasParallelEdges() {
 		if (this.properties == null) {
 			this.properties = new BreadthFirstSearch(this);
 		}
 		return this.properties.hasParallelEdges();
+	}
+
+	@Override
+	public boolean hasCycle() {
+		DepthFirstSearch dfs = new DepthFirstSearch(this);
+		dfs.getTopologicOrder();
+		return dfs.hasCycle();
+	}
+
+	@Override
+	public List<Integer> getTopologicOrder() {
+		return (new DepthFirstSearch(this)).getTopologicOrder();
 	}
 
 	@Override

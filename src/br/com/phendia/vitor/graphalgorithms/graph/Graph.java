@@ -17,7 +17,13 @@ public interface Graph {
 	
 	public boolean isSymmetric();
 	
+	public boolean isStronglyConnected();
+	
 	public boolean hasParallelEdges();
+	
+	public boolean hasCycle();
+	
+	public List<Integer> getTopologicOrder();
 	
 	public Graph getTransposed();
 	
