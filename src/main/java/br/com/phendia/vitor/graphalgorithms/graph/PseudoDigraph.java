@@ -4,8 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import br.com.phendia.vitor.graphalgorithms.search.BreadthFirstSearch;
 import br.com.phendia.vitor.graphalgorithms.search.DepthFirstSearch;
@@ -59,6 +64,22 @@ public class PseudoDigraph implements Graph {
 	@Override
 	public int getNumNodes() {
 		return this.adjacency.length;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject toJSON() {
+		JSONObject jobj = new JSONObject();
+		jobj.put("num_nodes", this.adjacency.length);
+		JSONArray jarray = new JSONArray();
+		for (int node = 0; node < this.adjacency.length; node++) {
+			JSONArray adjacencies = new JSONArray();
+			for (Edge edge : this.adjacency[node]) {
+				adjacencies.add(edge.getNodeTwo());
+			}
+			jarray.add(adjacencies);
+		}
+		jobj.put("nodes", jarray);
+		return jobj;
 	}
 
 	public String toString() {
@@ -239,6 +260,11 @@ public class PseudoDigraph implements Graph {
 		PseudoDigraph graph;
 		try {
 			graph = PseudoDigraph.readFromFile("resources/cfcs.gdf");
+//			System.out.println(graph);
+			StringWriter out = new StringWriter();
+			JSONValue.writeJSONString(graph.toJSON(), out);
+			String jsonText = out.toString();
+			System.out.println(jsonText);
 			System.out.println(graph);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
