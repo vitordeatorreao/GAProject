@@ -8,7 +8,20 @@
   <packaging>jar</packaging>
 
   <name>GAProject</name>
-  <url>http://maven.apache.org</url>
+  <description></description>
+  <url>https://github.com/vitordeatorreao/GAProject</url>
+  
+  <developers>
+    <developer>
+      <id>vitordeatorreao</id>
+      <name>Vítor de Albuquerque Torreão</name>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>-3</timezone>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
