@@ -66,6 +66,20 @@ public class PseudoDigraph implements Graph {
 		return this.adjacency.length;
 	}
 	
+	public String toDOT() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("digraph grafo {\n");
+		for (int node = 0; node < this.getNumNodes(); node++) {
+			for (Edge e : this.getAdjacentNodes(node)) {
+				int node1 = e.getNodeOne(), node2 = e.getNodeTwo();
+				sb.append("\t" + node1 + " -> " + node2 + 
+						" [label=\""+e.getWeight()+"\"];\n");
+			}
+		}
+		sb.append("}");
+		return sb.toString();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public JSONObject toJSON() {
 		JSONObject jobj = new JSONObject();
@@ -81,8 +95,8 @@ public class PseudoDigraph implements Graph {
 		jobj.put("nodes", jarray);
 		return jobj;
 	}
-
-	public String toString() {
+	
+	public String toJSONString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\n");
 		sb.append("\t\"num_nodes\" : " + this.adjacency.length + ",\n");
@@ -120,6 +134,10 @@ public class PseudoDigraph implements Graph {
 //		sb.append("\t]\n");
 		sb.append("}\n");
 		return sb.toString();
+	}
+
+	public String toString() {
+		return this.toJSONString();
 	}
 
 	public static PseudoDigraph readFromFile(String filename)
@@ -265,7 +283,7 @@ public class PseudoDigraph implements Graph {
 			JSONValue.writeJSONString(graph.toJSON(), out);
 			String jsonText = out.toString();
 			System.out.println(jsonText);
-			System.out.println(graph);
+			System.out.println(graph.toDOT());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
