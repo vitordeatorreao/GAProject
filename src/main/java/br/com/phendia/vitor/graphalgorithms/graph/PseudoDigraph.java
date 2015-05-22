@@ -28,8 +28,18 @@ public class PseudoDigraph implements Graph {
 		}
 	}
 
-	public LinkedList<Edge> getAdjacentNodes(int referenceNode) {
+	public LinkedList<Edge> getOutEdges(int referenceNode) {
 		return this.adjacency[referenceNode];
+	}
+	
+	@Override
+	public List<Integer> getAdjacentNodes(int referenceNode) {
+		List<Integer> adjacentNodes = new LinkedList<Integer>();
+		for (Edge e : getOutEdges(referenceNode)) {
+			Integer adjacentNode = e.getNodeTwo();
+			adjacentNodes.add(adjacentNode);
+		}
+		return adjacentNodes;
 	}
 
 	public boolean existsEdgeBetween(int node1, int node2) {
@@ -65,21 +75,21 @@ public class PseudoDigraph implements Graph {
 	public int getNumNodes() {
 		return this.adjacency.length;
 	}
-	
+
 	public String toDOT() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("digraph grafo {\n");
 		for (int node = 0; node < this.getNumNodes(); node++) {
-			for (Edge e : this.getAdjacentNodes(node)) {
+			for (Edge e : this.getOutEdges(node)) {
 				int node1 = e.getNodeOne(), node2 = e.getNodeTwo();
-				sb.append("\t" + node1 + " -> " + node2 + 
-						" [label=\""+e.getWeight()+"\"];\n");
+				sb.append("\t" + node1 + " -> " + node2 + " [label=\""
+						+ e.getWeight() + "\"];\n");
 			}
 		}
 		sb.append("}");
 		return sb.toString();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public JSONObject toJSON() {
 		JSONObject jobj = new JSONObject();
@@ -95,7 +105,7 @@ public class PseudoDigraph implements Graph {
 		jobj.put("nodes", jarray);
 		return jobj;
 	}
-	
+
 	public String toJSONString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\n");
@@ -103,35 +113,42 @@ public class PseudoDigraph implements Graph {
 		sb.append("\t\"nodes\" : [\n");
 		for (int i = 0;;) {
 			sb.append("\t\t[");
-			for (Edge edge : this.adjacency[i]) {
+			for (int j = 0;j < this.adjacency[i].size();) {
+				Edge edge = this.adjacency[i].get(j);
 				int successor = edge.getNodeTwo();
-				sb.append(successor + ", ");
+				if (++j >= this.adjacency[i].size()) {
+					sb.append(successor);
+					break;
+				} else {
+					sb.append(successor+", ");
+					continue;
+				}
 			}
 			if (++i >= this.adjacency.length) {
-				sb.replace(sb.length() - 2, sb.length(), "]\n");
+				sb.append("]\n");
 				break;
 			} else {
-				sb.replace(sb.length() - 2, sb.length(), "],\n");
+				sb.append("],\n");
 				continue;
 			}
 		}
 		sb.append("\t],\n");
-//		sb.append("\t\"strongly_connected_components\" : [\n");
-//		List<List<Integer>> scc = this.getStronglyConnectedComponents();
-//		for (int i = 0;;) {
-//			sb.append("\t\t[");
-//			for (int node : scc.get(i)) {
-//				sb.append(node + ", ");
-//			}
-//			if (++i >= scc.size()) {
-//				sb.replace(sb.length() - 2, sb.length(), "]\n");
-//				break;
-//			} else {
-//				sb.replace(sb.length() - 2, sb.length(), "],\n");
-//				continue;
-//			}
-//		}
-//		sb.append("\t]\n");
+		// sb.append("\t\"strongly_connected_components\" : [\n");
+		// List<List<Integer>> scc = this.getStronglyConnectedComponents();
+		// for (int i = 0;;) {
+		// sb.append("\t\t[");
+		// for (int node : scc.get(i)) {
+		// sb.append(node + ", ");
+		// }
+		// if (++i >= scc.size()) {
+		// sb.replace(sb.length() - 2, sb.length(), "]\n");
+		// break;
+		// } else {
+		// sb.replace(sb.length() - 2, sb.length(), "],\n");
+		// continue;
+		// }
+		// }
+		// sb.append("\t]\n");
 		sb.append("}\n");
 		return sb.toString();
 	}
@@ -247,8 +264,10 @@ public class PseudoDigraph implements Graph {
 
 	@Override
 	public List<List<Integer>> getStronglyConnectedComponents() {
-		List<Integer> topologicOrder = (new DepthFirstSearch(this)).getTopologicOrder();
-		return (new DepthFirstSearch(this.getTransposed())).getSCC(topologicOrder);
+		List<Integer> topologicOrder = (new DepthFirstSearch(this))
+				.getTopologicOrder();
+		return (new DepthFirstSearch(this.getTransposed()))
+				.getSCC(topologicOrder);
 	}
 
 	public boolean equals(Object obj) {
@@ -278,7 +297,7 @@ public class PseudoDigraph implements Graph {
 		PseudoDigraph graph;
 		try {
 			graph = PseudoDigraph.readFromFile("resources/cfcs.gdf");
-//			System.out.println(graph);
+			// System.out.println(graph);
 			StringWriter out = new StringWriter();
 			JSONValue.writeJSONString(graph.toJSON(), out);
 			String jsonText = out.toString();

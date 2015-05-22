@@ -9,7 +9,9 @@ public interface Graph {
 	
 	public void addEdge(int node1, int node2, float weight);
 	
-	public LinkedList<Edge> getAdjacentNodes(int referenceNode);
+	public LinkedList<Edge> getOutEdges(int referenceNode);
+	
+	public List<Integer> getAdjacentNodes(int referenceNode);
 	
 	public boolean existsEdgeBetween(int node1, int node2);
 	

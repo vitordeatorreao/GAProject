@@ -59,7 +59,7 @@ public class BreadthFirstSearch extends GraphSearch {
 		while (!this.queue.isEmpty()) {
 			int u = this.queue.poll();
 			LinkedList<Integer> neighbors = new LinkedList<Integer>();
-			for (Edge e : getGraph().getAdjacentNodes(u)) {
+			for (Edge e : getGraph().getOutEdges(u)) {
 				int v = e.getNodeTwo();
 				if (this.color[v] == WHITE) {
 					this.color[v] = GRAY;

@@ -78,7 +78,7 @@ public class DepthFirstSearch extends GraphSearch {
 	private void dfsVisit(int u) {
 		this.color[u] = GRAY;
 		this.initialTime[u] = this.time++;
-		for (Edge e : getGraph().getAdjacentNodes(u)) {
+		for (Edge e : getGraph().getOutEdges(u)) {
 			int v = e.getNodeTwo();
 			if (this.color[v] == GRAY && v != this.predecessor[u]) {
 				this.hasCycle = true;
