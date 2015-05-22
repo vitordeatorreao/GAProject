@@ -27,8 +27,14 @@ public class Exercise {
 		grafo.addEdge(2, 0);
 		grafo.addEdge(2, 3);
 		grafo.addEdge(3, 0);
-		System.out.println("Grafo 1 = " + grafo);
-		
+		/*
+		 * Operação ler um grafo de um arquivo texto conforme o formato
+		 */
+		if (args.length > 0) {
+			grafo = PseudoDigraph.readFromFile(args[0]);
+		} else {
+			grafo = PseudoDigraph.readFromFile("resources/topologicExample.gdf");
+		}
 		/*
 		 * Uma maneira de acessar (apenas) os vizinhos de um nó v (entrada)
 		 */
@@ -39,16 +45,7 @@ public class Exercise {
 		 * entradas
 		 */
 		System.out.println("Existe aresta entre 1 e 2? "
-				+ grafo.existsEdgeBetween(1, 2));
-		// True
-		/*
-		 * Operação ler um grafo de um arquivo texto conforme o formato
-		 */
-		if (args.length > 0) {
-			grafo = PseudoDigraph.readFromFile(args[0]);
-		} else {
-			grafo = PseudoDigraph.readFromFile("resources/powerg1.gdf");
-		}
+				+ grafo.existsEdgeBetween(1, 2)); // True
 		System.out.println("Grafo carregado do arquivo = " + grafo);
 		/*
 		 * Testar se G tem loop (arco/aresta para o próprio nó)		

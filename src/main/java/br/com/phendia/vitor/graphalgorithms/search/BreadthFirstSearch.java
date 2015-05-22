@@ -19,7 +19,6 @@ public class BreadthFirstSearch extends GraphSearch {
 	private Boolean hasLoop;
 	private Boolean isSymmetric;
 	private Boolean hasParallelEdges;
-	private Graph transposedGraph;
 
 	public BreadthFirstSearch(Graph graph) {
 		super(graph);
@@ -42,7 +41,6 @@ public class BreadthFirstSearch extends GraphSearch {
 		this.hasLoop = false;
 		this.isSymmetric = true;
 		this.hasParallelEdges = false;
-		this.transposedGraph = new PseudoDigraph(getGraph().getNumNodes());
 
 		/*
 		 * Color is already set to WHITE since starting value for all elements
@@ -67,7 +65,6 @@ public class BreadthFirstSearch extends GraphSearch {
 					this.predecessor[v] = u;
 					this.queue.add(v);
 				}
-				this.transposedGraph.addEdge(v, u);
 				if (v == u) {
 					this.hasLoop = true;
 				}
@@ -104,10 +101,6 @@ public class BreadthFirstSearch extends GraphSearch {
 		return distances;
 	}
 
-	public Graph getTransposedGraph() {
-		return transposedGraph;
-	}
-
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\n");
@@ -115,9 +108,6 @@ public class BreadthFirstSearch extends GraphSearch {
 		sb.append("\t\"has_loop\" : " + this.hasLoop + ",\n");
 		sb.append("\t\"has_parallel_edges\" : " + this.hasParallelEdges + ",\n");
 		sb.append("\t\"is_symmetric\" : " + this.isSymmetric + ",\n");
-		sb.append("\t\"transposed_graph\" : "
-				+ addCharsBetweenLines(this.transposedGraph.toString(), "\t")
-				+ ",\n");
 		sb.append("\t\"nodes\" : " + "[\n");
 		for (int i = 0;;) {
 			sb.append("\t\t" + i + " : {\n");
@@ -149,15 +139,15 @@ public class BreadthFirstSearch extends GraphSearch {
 		return sb.toString();
 	}
 
-	private String addCharsBetweenLines(String string, String chars) {
-		String[] lines = string.split("\n");
-		String newString = lines[0];
-		for (int i = 1; i < lines.length; i++) {
-			newString += "\n" + (chars + lines[i]);
-		}
-		return newString;
-
-	}
+//	private String addCharsBetweenLines(String string, String chars) {
+//		String[] lines = string.split("\n");
+//		String newString = lines[0];
+//		for (int i = 1; i < lines.length; i++) {
+//			newString += "\n" + (chars + lines[i]);
+//		}
+//		return newString;
+//
+//	}
 
 	public static void main(String[] args) {
 		try {

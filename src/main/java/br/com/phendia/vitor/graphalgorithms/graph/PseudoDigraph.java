@@ -256,10 +256,14 @@ public class PseudoDigraph implements Graph {
 
 	@Override
 	public Graph getTransposed() {
-		if (this.properties == null) {
-			this.properties = new BreadthFirstSearch(this);
+		Graph g = new PseudoDigraph(getNumNodes());
+		for (int u = 0; u < this.getNumNodes(); u++) {
+			for (Edge e : this.getOutEdges(u)) {
+				int v = e.getNodeTwo();
+				g.addEdge(v, u, e.getWeight());
+			}
 		}
-		return this.properties.getTransposedGraph();
+		return g;
 	}
 
 	@Override
