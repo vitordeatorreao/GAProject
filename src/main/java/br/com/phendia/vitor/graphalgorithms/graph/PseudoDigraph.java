@@ -110,7 +110,7 @@ public class PseudoDigraph implements Graph {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\n");
 		sb.append("\t\"num_nodes\" : " + this.adjacency.length + ",\n");
-		sb.append("\t\"nodes\" : [\n");
+		sb.append("\t\"adjacency_list\" : [\n");
 		for (int i = 0;;) {
 			sb.append("\t\t[");
 			for (int j = 0;j < this.adjacency[i].size();) {
