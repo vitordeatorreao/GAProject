@@ -32,5 +32,11 @@ public interface Graph {
 	public List<List<Integer>> getStronglyConnectedComponents();
 	
 	public int getNumNodes();
+	
+	public int getOutDegree(int node);
+	
+	public int getInDegree(int node);
+	
+	public int getTotalDegree(int node);
 
 }

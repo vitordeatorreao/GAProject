@@ -67,13 +67,34 @@ public class PseudoDigraph implements Graph {
 	 * This method must be called any time there is a change in the graph's
 	 * structure. This will cause another run of the Search Algorithm.
 	 */
-	private void resetProperties() {
+	protected void resetProperties() {
 		this.properties = null;
 	}
 
 	@Override
 	public int getNumNodes() {
 		return this.adjacency.length;
+	}
+
+	@Override
+	public int getOutDegree(int node) {
+		return this.getOutEdges(node).size();
+	}
+
+	@Override
+	public int getInDegree(int node) {
+		int count = 0;
+		for (int node2 = 0; node2 < getNumNodes(); node2++) {
+			if (existsEdgeBetween(node2, node)) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	@Override
+	public int getTotalDegree(int node) {
+		return this.getInDegree(node) + this.getOutDegree(node);
 	}
 
 	public String toDOT() {

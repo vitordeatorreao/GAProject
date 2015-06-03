@@ -2,7 +2,9 @@ package br.com.phendia.vitor.graphalgorithms.graph;
 
 import java.util.Random;
 
-public class Tournament extends PseudoDigraph { 
+public class Tournament extends PseudoDigraph {
+	
+	private Graph originalGraph;
 	
 	public Tournament(Graph g) {
 		super(g.getNumNodes());
@@ -20,6 +22,28 @@ public class Tournament extends PseudoDigraph {
 				}
 			}
 		}
+		this.originalGraph = g;
+	}
+	
+	public Tournament(int numNodes) {
+		super(numNodes);
+	}
+	
+	public Graph getOriginalGraph() {
+		return this.originalGraph;
+	}
+	
+	public Tournament copySubgraph(int numNodes) {
+		Tournament graph = new Tournament(numNodes);
+		for (int node1 = 0; node1 < numNodes; node1++) {
+			for (Edge edge : this.getOutEdges(node1)) {
+				int node2 = edge.getNodeTwo();
+				if (node2 < numNodes) {
+					graph.addEdge(node1, node2, edge.getWeight());
+				}
+			}
+		}
+		return graph;
 	}
 	
 	public static void main(String[] args) {
@@ -27,6 +51,8 @@ public class Tournament extends PseudoDigraph {
 			CompleteDigraph g = new CompleteDigraph(5);
 			Tournament tournament = new Tournament(g);
 			System.out.println(tournament);
+			Path hapath = HamiltonianPath.build(tournament);
+			System.out.println(hapath);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
