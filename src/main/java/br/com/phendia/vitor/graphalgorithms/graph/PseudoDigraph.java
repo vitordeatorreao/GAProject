@@ -31,7 +31,7 @@ public class PseudoDigraph implements Graph {
 	public LinkedList<Edge> getOutEdges(int referenceNode) {
 		return this.adjacency[referenceNode];
 	}
-	
+
 	@Override
 	public List<Integer> getAdjacentNodes(int referenceNode) {
 		List<Integer> adjacentNodes = new LinkedList<Integer>();
@@ -51,6 +51,18 @@ public class PseudoDigraph implements Graph {
 			}
 		}
 		return false;
+	}
+
+	public float getEdgeWeight(int node1, int node2)
+			throws EdgeDoesNotExistException {
+		LinkedList<Edge> list = this.adjacency[node1];
+		for (int i = 0; i < list.size(); i++) {
+			Edge edge = list.get(i);
+			if (edge.getNodeTwo() == node2) {
+				return edge.getWeight();
+			}
+		}
+		throw new EdgeDoesNotExistException();
 	}
 
 	public void addEdge(int node1, int node2) {
@@ -91,7 +103,7 @@ public class PseudoDigraph implements Graph {
 		}
 		return count;
 	}
-	
+
 	@Override
 	public int getTotalDegree(int node) {
 		return this.getInDegree(node) + this.getOutDegree(node);
@@ -134,14 +146,14 @@ public class PseudoDigraph implements Graph {
 		sb.append("\t\"adjacency_list\" : [\n");
 		for (int i = 0;;) {
 			sb.append("\t\t[");
-			for (int j = 0;j < this.adjacency[i].size();) {
+			for (int j = 0; j < this.adjacency[i].size();) {
 				Edge edge = this.adjacency[i].get(j);
 				int successor = edge.getNodeTwo();
 				if (++j >= this.adjacency[i].size()) {
 					sb.append(successor);
 					break;
 				} else {
-					sb.append(successor+", ");
+					sb.append(successor + ", ");
 					continue;
 				}
 			}
@@ -176,6 +188,73 @@ public class PseudoDigraph implements Graph {
 
 	public String toString() {
 		return this.toJSONString();
+	}
+
+	public static PseudoDigraph readFromFileWithWeights(String filename)
+			throws IOException {
+		File file = new File(filename);
+		if (!file.exists())
+			throw new IOException("File does not exist");
+		if (!file.canRead())
+			throw new IOException("File cannot be read");
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String line = br.readLine();
+		int lineNumber = 1;
+		if (line == null) {
+			br.close();
+			throw new IllegalArgumentException("Syntax Error at line "
+					+ lineNumber + ": Expected at least one line.");
+		}
+		int numNodes = 0;
+		try {
+			numNodes = Integer.parseInt(line);
+		} catch (NumberFormatException e) {
+			br.close();
+			throw new IllegalArgumentException("Syntax Error at line "
+					+ lineNumber + ": Expected an integer");
+		}
+		PseudoDigraph graph = new PseudoDigraph(numNodes);
+		for (int i = 0; i < numNodes; i++) {
+			line = br.readLine();
+			lineNumber++;
+			if (line == null) {
+				continue;
+				/*
+				 * br.close(); throw new
+				 * IllegalArgumentException("Syntax Error at line " + lineNumber
+				 * + ": Expected at least "+(numNodes+1) + "lines in the file");
+				 */
+				// In case there are nodes with degree 0, there will be null
+				// lines
+			}
+			int node = (lineNumber - 2);
+			String[] nodesAndWeights = line.split(" ");
+			for (int j = 0; j < nodesAndWeights.length; j += 2) {
+				if (nodesAndWeights[j].equals(""))
+					continue;
+				try {
+					int node2 = Integer.parseInt(nodesAndWeights[j]);
+					float weight = Float.parseFloat(nodesAndWeights[j + 1]);
+					graph.addEdge(node, node2, weight);
+				} catch (NumberFormatException e) {
+					br.close();
+					throw new IllegalArgumentException(
+							"Syntax Error at line "
+									+ lineNumber
+									+ ": Expected an integer followed by a " 
+									+ "float indicating the edge's weight");
+				} catch (IndexOutOfBoundsException e) {
+					br.close();
+					throw new IllegalArgumentException(
+							"Syntax Error at line "
+									+ lineNumber
+									+ ": There should be a float after every "
+									+ "integer");
+				}
+			}
+		}
+		br.close();
+		return graph;
 	}
 
 	public static PseudoDigraph readFromFile(String filename)

@@ -54,7 +54,6 @@ public class Tournament extends PseudoDigraph {
 			Path hapath = HamiltonianPath.build(tournament);
 			System.out.println(hapath);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

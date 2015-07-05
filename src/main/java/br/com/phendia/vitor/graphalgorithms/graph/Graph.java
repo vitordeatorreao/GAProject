@@ -15,6 +15,8 @@ public interface Graph {
 	
 	public boolean existsEdgeBetween(int node1, int node2);
 	
+	public float getEdgeWeight(int node1, int node2) throws EdgeDoesNotExistException;
+	
 	public boolean hasLoop();
 	
 	public boolean isSymmetric();
