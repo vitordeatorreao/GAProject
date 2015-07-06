@@ -2,6 +2,9 @@ package br.com.phendia.vitor.graphalgorithms.graph;
 
 import java.util.Random;
 
+import br.com.phendia.vitor.graphalgorithms.paths.HamiltonianPath;
+import br.com.phendia.vitor.graphalgorithms.paths.Path;
+
 public class Tournament extends PseudoDigraph {
 	
 	private Graph originalGraph;

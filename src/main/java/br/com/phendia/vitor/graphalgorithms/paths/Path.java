@@ -1,6 +1,8 @@
-package br.com.phendia.vitor.graphalgorithms.graph;
+package br.com.phendia.vitor.graphalgorithms.paths;
 
 import java.util.ArrayList;
+
+import br.com.phendia.vitor.graphalgorithms.graph.Graph;
 
 public class Path extends ArrayList<Integer> {
 	

@@ -1,4 +1,6 @@
-package br.com.phendia.vitor.graphalgorithms.graph;
+package br.com.phendia.vitor.graphalgorithms.paths;
+
+import br.com.phendia.vitor.graphalgorithms.graph.Tournament;
 
 public class HamiltonianPath {
 
