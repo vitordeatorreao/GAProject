@@ -17,6 +17,10 @@ public class PrimMST implements Comparator<Integer> {
 	private int[] pi;
 	private Graph graph;
 
+	public PrimMST(Graph g) {
+		this(g, 0);
+	}
+	
 	public PrimMST(Graph g, int r) {
 		this.graph = g;
 		this.keys = new float[g.getNumNodes()];
@@ -31,7 +35,6 @@ public class PrimMST implements Comparator<Integer> {
 		keys[r] = 0;
 		while (!priorityQueue.isEmpty()) {
 			int u = priorityQueue.remove();
-			System.out.println(u);
 			for (int v : g.getAdjacentNodes(u)) {
 				try {
 					if (priorityQueue.contains(v)
