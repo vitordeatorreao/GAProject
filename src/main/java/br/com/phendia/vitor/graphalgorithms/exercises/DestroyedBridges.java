@@ -56,6 +56,18 @@ public class DestroyedBridges {
 		}
 	}
 
+	public Graph getProblemGraph() {
+		return problemGraph;
+	}
+
+	public Graph getPrimAnswer() {
+		return primAnswer;
+	}
+
+	public Set<DestroyedBridges.Bridge> getResultSet() {
+		return resultSet;
+	}
+
 	public class Bridge {
 
 		private int nodeOne, nodeTwo;
@@ -127,7 +139,7 @@ public class DestroyedBridges {
 		
 		DestroyedBridges db = new DestroyedBridges(args[0], args[1]);
 		System.out.print("It is best to rebuild the following bridges: ");
-		System.out.println(db.resultSet);
+		System.out.println(db.getResultSet());
 
 	}
 
