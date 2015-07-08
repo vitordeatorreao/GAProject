@@ -1,4 +1,4 @@
-package br.com.phendia.graphalgorithms.trees;
+package br.com.phendia.vitor.graphalgorithms.trees;
 
 import java.io.IOException;
 import java.util.ArrayList;

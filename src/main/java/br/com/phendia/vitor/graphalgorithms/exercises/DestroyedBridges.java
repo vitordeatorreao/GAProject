@@ -6,10 +6,10 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import br.com.phendia.graphalgorithms.trees.PrimMST;
 import br.com.phendia.vitor.graphalgorithms.graph.Edge;
 import br.com.phendia.vitor.graphalgorithms.graph.Graph;
 import br.com.phendia.vitor.graphalgorithms.graph.PseudoDigraph;
+import br.com.phendia.vitor.graphalgorithms.trees.PrimMST;
 
 public class DestroyedBridges {
 
