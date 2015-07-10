@@ -6,15 +6,16 @@ import br.com.phendia.vitor.graphalgorithms.paths.HamiltonianPath;
 import br.com.phendia.vitor.graphalgorithms.paths.Path;
 
 public class Tournament extends PseudoDigraph {
-	
+
 	private Graph originalGraph;
-	
-	public Tournament(Graph g) {
+
+	public Tournament(CompleteDigraph g) {
 		super(g.getNumNodes());
 		Random rand = new Random();
 		for (int i = 0; i < g.getNumNodes(); i++) {
 			for (int j : g.getAdjacentNodes(i)) {
-				if (this.existsEdgeBetween(i, j) || this.existsEdgeBetween(j, i)) {
+				if (this.existsEdgeBetween(i, j)
+						|| this.existsEdgeBetween(j, i)) {
 					continue;
 				} else {
 					if (rand.nextBoolean()) {
@@ -27,15 +28,25 @@ public class Tournament extends PseudoDigraph {
 		}
 		this.originalGraph = g;
 	}
-	
+
+	public Tournament(PseudoDigraph graph) {
+		super(graph.getNumNodes());
+		for (int node = 0; node < graph.getNumNodes(); node++) {
+			for (Edge edge : graph.getOutEdges(node)) {
+				this.addEdge(edge.getNodeOne(), edge.getNodeTwo(),
+						edge.getWeight());
+			}
+		}
+	}
+
 	public Tournament(int numNodes) {
 		super(numNodes);
 	}
-	
+
 	public Graph getOriginalGraph() {
 		return this.originalGraph;
 	}
-	
+
 	public Tournament copySubgraph(int numNodes) {
 		Tournament graph = new Tournament(numNodes);
 		for (int node1 = 0; node1 < numNodes; node1++) {
@@ -48,7 +59,7 @@ public class Tournament extends PseudoDigraph {
 		}
 		return graph;
 	}
-	
+
 	public static void main(String[] args) {
 		try {
 			CompleteDigraph g = new CompleteDigraph(5);
@@ -59,7 +70,7 @@ public class Tournament extends PseudoDigraph {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }
