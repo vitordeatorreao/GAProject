@@ -1,6 +1,7 @@
 package br.com.phendia.vitor.graphalgorithms.exercises;
 
 import java.io.IOException;
+
 import br.com.phendia.vitor.graphalgorithms.graph.Edge;
 import br.com.phendia.vitor.graphalgorithms.graph.Graph;
 import br.com.phendia.vitor.graphalgorithms.graph.PseudoDigraph;
@@ -68,8 +69,10 @@ public class DifferenceConstraintsSystems {
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			args = new String[1];
-			//args[0] = "examples/DiffConstrGraph1.wgdf";
-			args[0] = "examples/NegativeCycleGraph.wgdf";
+			args[0] = "examples/DiffConstrGraph1.wgdf";
+			//args[0] = "examples/NegativeCycleGraph.wgdf";
+			System.out.println("No graph provided as argument, using default: "
+					+ args[0]);
 		}
 		DifferenceConstraintsSystems dcs = new DifferenceConstraintsSystems(
 				args[0]);

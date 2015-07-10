@@ -135,6 +135,8 @@ public class DestroyedBridges {
 			args = new String[2];
 			args[0] = "examples/intactBridges.wgdf";
 			args[1] = "examples/destroyedBridges.wgdf";
+			System.out.println("No graphs provided as arguments, using default: "
+					+ args[0] + " and " + args[1]);
 		}
 		
 		DestroyedBridges db = new DestroyedBridges(args[0], args[1]);
